@@ -1,0 +1,69 @@
+package novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.controller;
+
+import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.dto.ArtWorkDTO;
+import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.model.ArtWork;
+import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.service.ArtWorkService;
+import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.uploadeResponse.ArtWorkUploadResponse;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
+
+@RestController
+@RequestMapping("/artworks")
+public class ArtWorkController {
+
+    private final ArtWorkService artWorkService;
+
+    public ArtWorkController(ArtWorkService artWorkService) {
+        this.artWorkService = artWorkService;
+    }
+
+    @GetMapping(value = "")
+    public ResponseEntity<List<ArtWorkDTO>> getAllArtWorks(){
+
+        List<ArtWorkDTO> artWorkDTOs = artWorkService.getArtWorks();
+
+        return ResponseEntity.ok().body(artWorkDTOs);
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<ArtWorkDTO> getArtWork(@PathVariable("id") Long id){
+
+        ArtWorkDTO optionalArtWork = artWorkService.getArtWork(id);
+
+        return ResponseEntity.ok().body(optionalArtWork);
+    }
+
+
+    @PostMapping(value = "/upload")
+    public ArtWorkUploadResponse createArtWork (@RequestParam("artWorkImage") MultipartFile artWorkImage) throws IOException {
+        ArtWork fileDocument = artWorkService.uploadArtWork(artWorkImage);
+        String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/downloadFromDB/").path(Objects.requireNonNull(artWorkImage.getOriginalFilename())).toUriString();
+
+        String contentType = artWorkImage.getContentType();
+
+        return new ArtWorkUploadResponse(fileDocument.getFilename(), url, contentType );
+
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<ArtWorkDTO> updateArtWork(@PathVariable ("id") Long id , @RequestBody ArtWorkDTO artWorkDTO){
+
+        artWorkService.changeArtWork(id, artWorkDTO);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Object> deleteArtWork(@PathVariable("id") Long id){
+
+        artWorkService.deleteAccount(id);
+
+        return ResponseEntity.noContent().build();
+    }
+}
