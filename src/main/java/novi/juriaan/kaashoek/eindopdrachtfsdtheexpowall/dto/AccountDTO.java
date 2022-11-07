@@ -16,7 +16,6 @@ import java.util.List;
 public class AccountDTO {
 
     public Long id;
-    public String nickName;
     public String firstName;
     public String lastName;
     public LocalDate DOB;
@@ -31,7 +30,6 @@ public class AccountDTO {
         AccountDTO dto = new AccountDTO();
 
         dto.id = account.getId();
-        dto.nickName = account.getNickName();
         dto.firstName = account.getFirstName();
         dto.lastName = account.getLastName();
         dto.DOB = account.getDOB();
@@ -49,7 +47,6 @@ public class AccountDTO {
         Account account = new Account();
 
         account.setId(accountDTO.id);
-        account.setNickName(accountDTO.nickName);
         account.setFirstName(accountDTO.firstName);
         account.setLastName(accountDTO.lastName);
         account.setDOB(accountDTO.DOB);

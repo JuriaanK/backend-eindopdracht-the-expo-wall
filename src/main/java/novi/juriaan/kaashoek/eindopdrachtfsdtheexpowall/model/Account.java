@@ -15,8 +15,6 @@ public class Account {
     @Column(name = "account_id")
     private Long id;
     @Column
-    private String nickName;
-    @Column
     private String firstName;
     @Column
     private String lastName;
@@ -41,9 +39,8 @@ public class Account {
     @OneToMany(mappedBy = "accountMes")
     private List<Message> messageList;
 
-    public Account(Long id, String nickName, String firstName, String lastName, LocalDate DOB, byte[] profileImage, String imageName, User user, List<ArtWork> artWorkList, List<Message> messageList) {
+    public Account(Long id, String firstName, String lastName, LocalDate DOB, byte[] profileImage, String imageName, User user, List<ArtWork> artWorkList, List<Message> messageList) {
         this.id = id;
-        this.nickName = nickName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.DOB = DOB;
@@ -63,14 +60,6 @@ public class Account {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
     }
 
     public String getFirstName() {
