@@ -4,25 +4,34 @@ import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.dto.AccountDTO;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.exceptions.RecordNotFoundException;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.model.Account;
 
+import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.model.User;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.repository.AccountRepository;
-import org.springframework.http.ResponseEntity;
+import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.repository.UserRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class AccountService {
 
     private final AccountRepository accountRepos;
+    private final UserRepository userRepos;
 
-    public AccountService(AccountRepository accountRepos) {
+    public AccountService(AccountRepository accountRepos, UserRepository userRepos) {
         this.accountRepos = accountRepos;
 
+        this.userRepos = userRepos;
     }
+
+
+
 
     public List<AccountDTO> getAccounts(){
         List<AccountDTO> allAccounts = new ArrayList<>();
@@ -42,7 +51,6 @@ public class AccountService {
         }else {
             throw new UsernameNotFoundException(id.toString());
         }
-
         return dto;
     }
 
@@ -52,9 +60,32 @@ public class AccountService {
 
     public AccountDTO createAccount (AccountDTO accountDTO){
         Account account = AccountDTO.toAccount(accountDTO);
+        Account savedAccount = accountRepos.save(account);
+
+        User linkedUser = savedAccount.getUser();
+
+        String UserID = linkedUser.getUsername();
+
+        User getLinkedUser = userRepos.findById(UserID).get();
+
+        getLinkedUser.setAccountID(savedAccount.getId());
+
+        userRepos.save(getLinkedUser);
+
+
+        return AccountDTO.fromAccount(savedAccount);
+    }
+
+    public Account uploadProfileImage(Long id, MultipartFile file) throws IOException {
+        if(!accountRepos.existsById(id)) throw new RecordNotFoundException(id.toString());
+        String name = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+        Account account = accountRepos.findById(id).get();
+        account.setImageName(name);
+        account.setProfileImage(file.getBytes());
+
         accountRepos.save(account);
 
-        return AccountDTO.fromAccount(account);
+        return account;
     }
 
     public AccountDTO changeAccount (Long id, AccountDTO inputDto){

@@ -7,29 +7,22 @@ import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.model.User;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.repository.RoleRepository;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.repository.UserRepository;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.service.UserService;
+import org.aspectj.weaver.NewConstructorTypeMunger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/users")
 public class UserController {
 
     private final UserService userService;
-    private final UserRepository userRepos;
-    private final RoleRepository roleRepos;
-    private final PasswordEncoder encoder;
+
 
     public UserController(UserService userService, UserRepository userRepos, RoleRepository roleRepos, PasswordEncoder encoder) {
         this.userService = userService;
-        this.userRepos = userRepos;
-        this.roleRepos = roleRepos;
-        this.encoder = encoder;
     }
 
     @GetMapping(value ="")
@@ -48,21 +41,15 @@ public class UserController {
 
     @PostMapping(value = "")
     public String createUser(@RequestBody UserDTO userDTO){
-        User newUser = new User();
-        newUser.setUsername(userDTO.username);
-        newUser.setPassword(encoder.encode(userDTO.password));
+        String newUser = userService.createUser(userDTO);
 
-        List<Role> userRoles = new ArrayList<>();
-        for (String rolename : userDTO.roles) {
-            Optional<Role> or = roleRepos.findById(rolename);
+        return "Created " + newUser;
+    }
 
-            userRoles.add(or.get());
-        }
-        newUser.setRoles(userRoles);
-
-        userRepos.save(newUser);
-
-        return "Done";
+    @PostMapping(value = "/admin")
+    public String createAdmin(@RequestBody UserDTO userDTO){
+        String newAdmin = userService.createAdmin(userDTO);
+        return "Created " + newAdmin;
     }
 
     @PutMapping(value = "/{username}")

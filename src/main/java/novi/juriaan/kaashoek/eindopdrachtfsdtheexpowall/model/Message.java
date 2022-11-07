@@ -15,11 +15,16 @@ public class Message {
     @Column
     private String message;
 
-    public Message(long messageID, String sender, String receiver, String message) {
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private Account accountMes;
+
+    public Message(long messageID, String sender, String receiver, String message, Account accountMes) {
         this.messageID = messageID;
         this.sender = sender;
         this.receiver = receiver;
         this.message = message;
+        this.accountMes = accountMes;
     }
 
     public Message() {
@@ -55,5 +60,13 @@ public class Message {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Account getAccountMes() {
+        return accountMes;
+    }
+
+    public void setAccountMes(Account accountMes) {
+        this.accountMes = accountMes;
     }
 }

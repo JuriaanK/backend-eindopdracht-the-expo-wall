@@ -2,17 +2,20 @@ package novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.model;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
 public class User {
 
     @Id
+    @Column(name = "username_id")
     private String username;
     @Column
     private String email;
@@ -20,6 +23,14 @@ public class User {
     private String Password;
     @Column
     private String userBio;
+
+    @OneToOne
+    private Account account;
+    @Column
+    private Long accountID;
+
+
+
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles;
@@ -32,12 +43,14 @@ public class User {
         this.roles = roles;
     }
 
-
-    public User(String username, String email, String password, String userBio) {
+    public User(String username, String email, String password, String userBio, Account account, Long accountID, Collection<Role> roles) {
         this.username = username;
         this.email = email;
         Password = password;
         this.userBio = userBio;
+        this.account = account;
+        this.accountID = accountID;
+        this.roles = roles;
     }
 
     public User() {
@@ -75,4 +88,19 @@ public class User {
         this.userBio = userBio;
     }
 
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public Long getAccountID() {
+        return accountID;
+    }
+
+    public void setAccountID(Long accountID) {
+        this.accountID = accountID;
+    }
 }

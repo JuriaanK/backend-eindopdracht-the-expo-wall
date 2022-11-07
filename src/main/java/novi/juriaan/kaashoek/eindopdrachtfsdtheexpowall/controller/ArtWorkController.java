@@ -1,6 +1,7 @@
 package novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.controller;
 
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.dto.ArtWorkDTO;
+import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.model.Account;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.model.ArtWork;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.service.ArtWorkService;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.uploadeResponse.ArtWorkUploadResponse;
@@ -41,9 +42,11 @@ public class ArtWorkController {
 
 
     @PostMapping(value = "/upload")
-    public ArtWorkUploadResponse createArtWork (@RequestParam("artWorkImage") MultipartFile artWorkImage) throws IOException {
-        ArtWork fileDocument = artWorkService.uploadArtWork(artWorkImage);
-        String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/downloadFromDB/").path(Objects.requireNonNull(artWorkImage.getOriginalFilename())).toUriString();
+    public ArtWorkUploadResponse createArtWork (@RequestParam("artWorkImage") MultipartFile artWorkImage, @RequestParam("owner") Account owner) throws IOException {
+        ArtWork fileDocument = artWorkService.uploadArtWork(artWorkImage, owner);
+
+
+        String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/upload").path(Objects.requireNonNull(artWorkImage.getOriginalFilename())).toUriString();
 
         String contentType = artWorkImage.getContentType();
 

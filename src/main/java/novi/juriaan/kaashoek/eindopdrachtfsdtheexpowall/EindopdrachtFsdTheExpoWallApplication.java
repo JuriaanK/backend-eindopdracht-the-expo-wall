@@ -1,5 +1,6 @@
 package novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall;
 
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

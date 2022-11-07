@@ -40,7 +40,7 @@ public class AuthenticationController {
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                    .body("Token generated");
+                    .body(token);
         }
         catch (AuthenticationException ex) {
             return new ResponseEntity(ex.getMessage(), HttpStatus.UNAUTHORIZED);

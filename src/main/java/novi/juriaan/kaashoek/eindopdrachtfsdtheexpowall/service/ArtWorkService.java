@@ -58,10 +58,11 @@ public class ArtWorkService {
         artworkRepos.deleteById(id);
     }
 
-    public ArtWork uploadArtWork(MultipartFile file) throws IOException {
+    public ArtWork uploadArtWork(MultipartFile file, Account owner) throws IOException {
         String name = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
         ArtWork artWork = new ArtWork();
         artWork.setFilename(name);
+        artWork.setAccount(owner);
         artWork.setArtWorkImage(file.getBytes());
 
         artworkRepos.save(artWork);

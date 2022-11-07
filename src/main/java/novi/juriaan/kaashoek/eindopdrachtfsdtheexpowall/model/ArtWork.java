@@ -17,11 +17,16 @@ public class ArtWork {
     @Lob
     private byte[] artWorkImage;
 
-    public ArtWork(Long artWorkID, String filename, Long likes, byte[] artWorkImage) {
+    @ManyToOne
+    @JoinColumn(name = "owner")
+    private Account account;
+
+    public ArtWork(Long artWorkID, String filename, Long likes, byte[] artWorkImage, Account account) {
         this.artWorkID = artWorkID;
         this.filename = filename;
         this.likes = likes;
         this.artWorkImage = artWorkImage;
+        this.account = account;
     }
 
     public ArtWork() {
@@ -57,5 +62,13 @@ public class ArtWork {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 }
