@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,11 +26,11 @@ public class ArtWorkController {
     }
 
     @GetMapping(value = "")
-    public ResponseEntity<List<ArtWorkDTO>> getAllArtWorks(){
+    public Collection<ArtWorkDTO> getAllArtWorks(){
 
-        List<ArtWorkDTO> artWorkDTOs = artWorkService.getArtWorks();
+        Collection<ArtWorkDTO> artWorkDTOs = artWorkService.getArtWorks();
 
-        return ResponseEntity.ok().body(artWorkDTOs);
+        return artWorkDTOs;
     }
 
     @GetMapping(value = "/{id}")

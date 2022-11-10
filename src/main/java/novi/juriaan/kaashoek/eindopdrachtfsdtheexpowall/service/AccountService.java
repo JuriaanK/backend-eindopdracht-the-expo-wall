@@ -93,9 +93,6 @@ public class AccountService {
         Account changedAccount = AccountDTO.toAccount(inputDto);
         Account account = accountRepos.findById(id).get();
 
-        if (!account.getNickName().equals(changedAccount.getNickName())){
-            account.setNickName(changedAccount.getNickName());
-        }
         if (!account.getFirstName().equals(changedAccount.getFirstName())){
             account.setFirstName(changedAccount.getFirstName());
         }

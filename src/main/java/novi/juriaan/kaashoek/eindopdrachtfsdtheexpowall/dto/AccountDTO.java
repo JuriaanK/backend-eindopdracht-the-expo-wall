@@ -8,6 +8,8 @@ import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.model.Message;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.model.User;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.Column;
+import javax.persistence.Lob;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,9 @@ public class AccountDTO {
     public String firstName;
     public String lastName;
     public LocalDate DOB;
+    @Column
+    @Lob
+    private byte[] profileImage;
 
     public UserDTO user;
     @JsonIgnoreProperties("account")
@@ -33,7 +38,8 @@ public class AccountDTO {
         dto.firstName = account.getFirstName();
         dto.lastName = account.getLastName();
         dto.DOB = account.getDOB();
-        if (dto.user == null) {
+        dto.profileImage = account.getProfileImage();
+        if (dto.user != null) {
             dto.user = UserDTO.fromUser(account.getUser());}
         if(dto.artWork != null){
             dto.artWork = AccountDTO.convertEntityToArtworkDTO(account.getArtWorkList());}
@@ -50,6 +56,7 @@ public class AccountDTO {
         account.setFirstName(accountDTO.firstName);
         account.setLastName(accountDTO.lastName);
         account.setDOB(accountDTO.DOB);
+        account.setProfileImage(accountDTO.profileImage);
         if (accountDTO.user != null){
             account.setUser(UserDTO.toUser(accountDTO.user));}
         if (account.getArtWorkList() != null){

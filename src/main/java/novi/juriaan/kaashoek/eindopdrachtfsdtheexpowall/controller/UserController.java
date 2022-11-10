@@ -56,7 +56,14 @@ public class UserController {
     public ResponseEntity<UserDTO> updateUser(@PathVariable("username") String username, @RequestBody UserDTO userDTO){
         userService.updateUser(username, userDTO);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body(userDTO);
+    }
+
+    @PutMapping(value = "/passwordchange/{username}")
+    public ResponseEntity<String> updatePassword(@PathVariable("username") String username, @RequestBody String password){
+        userService.updatePassword(username, password);
+
+        return ResponseEntity.ok().body(password);
     }
 
     @DeleteMapping(value = "/{username}")
@@ -65,6 +72,4 @@ public class UserController {
 
         return ResponseEntity.noContent().build();
     }
-
-
 }

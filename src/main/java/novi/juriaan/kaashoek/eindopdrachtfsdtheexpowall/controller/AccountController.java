@@ -49,8 +49,8 @@ public class AccountController {
         return ResponseEntity.created(null).body(newAccount);
     }
 
-    @PutMapping(value = "/{id}/addimage")
-    public ProfileImageUploadResponse addImage (@PathVariable("id") Long id, @RequestParam("profileImage") MultipartFile profileImage)throws IOException{
+    @PutMapping(value = "/addimage")
+    public ProfileImageUploadResponse addImage (@RequestParam("id") Long id, @RequestParam("profileImage") MultipartFile profileImage)throws IOException{
 
 
         Account fileDocument = accountService.uploadProfileImage(id, profileImage);

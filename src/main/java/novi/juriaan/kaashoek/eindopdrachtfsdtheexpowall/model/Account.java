@@ -21,8 +21,9 @@ public class Account {
     @Column
     private LocalDate DOB;
 
-    @Lob
+
     @Column
+    @Lob
     private byte[] profileImage;
     @Column
     private String imageName;

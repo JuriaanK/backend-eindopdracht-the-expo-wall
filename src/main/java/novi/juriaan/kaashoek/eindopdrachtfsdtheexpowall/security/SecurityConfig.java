@@ -49,16 +49,22 @@ public class SecurityConfig {
                 .httpBasic().disable()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/users").permitAll()
+
                 .antMatchers(HttpMethod.POST, "/accounts").permitAll()
                 .antMatchers(HttpMethod.PUT, "/accounts").permitAll()
+
                 .antMatchers(HttpMethod.POST, "/auth").permitAll()
-                .antMatchers("/users/admin").hasAuthority("ADMIN")
+
                 .antMatchers(HttpMethod.GET,"/users").hasAnyAuthority("USER", "ADMIN")
                 .antMatchers(HttpMethod.PUT,"/users").hasAnyAuthority("USER", "ADMIN")
-                .antMatchers("/accounts").hasAnyAuthority("USER", "ADMIN")
-                .antMatchers("/artworks").hasAnyAuthority("USER", "ADMIN")
+
+                .antMatchers(HttpMethod.GET,"/artworks").hasAnyAuthority("USER", "ADMIN")
+                .antMatchers(HttpMethod.POST,"/artworks").hasAnyAuthority("USER", "ADMIN")
+                .antMatchers(HttpMethod.PUT,"/artworks").hasAnyAuthority("USER", "ADMIN")
                 .antMatchers("/messages").hasAnyAuthority("USER", "ADMIN")
+
                 .antMatchers("/roles").hasAnyAuthority("ADMIN")
+                .antMatchers("/users/admin").hasAuthority("ADMIN")
                 .and()
                 .addFilterBefore(new JwtRequestFilter(jwtService, userDetailsService()), UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable()

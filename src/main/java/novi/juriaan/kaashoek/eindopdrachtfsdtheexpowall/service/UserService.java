@@ -52,6 +52,7 @@ public class UserService {
         newUser.setUsername(userDTO.username);
         newUser.setPassword(encoder.encode(userDTO.password));
         newUser.setEmail(userDTO.email);
+        newUser.setUserBio("Don't forget your Bio");
 
 
         List<Role> userRoles = new ArrayList<>();
@@ -69,6 +70,7 @@ public class UserService {
         newAdmin.setUsername(userDTO.username);
         newAdmin.setPassword(encoder.encode(userDTO.password));
         newAdmin.setEmail(userDTO.email);
+        newAdmin.setUserBio("Don't forget your Bio");
 
 
         List<Role> userRoles = new ArrayList<>();
@@ -86,19 +88,31 @@ public class UserService {
         User user = userRepos.findById(username).get();
         User changedUser = UserDTO.toUser(newUser);
 
-        if (!user.getUsername().equals(changedUser.getUsername())){
-            user.setUsername(changedUser.getUsername());
+        if (    !user.getEmail().equals(changedUser.getEmail())
+                && changedUser.getEmail() != null
+                && changedUser.getEmail() != ""){
+            user.setEmail(newUser.email);
         }
-        if (!user.getEmail().equals(changedUser.getEmail())){
-            user.setEmail(changedUser.getEmail());
+        if(     !user.getPassword().equals(changedUser.getPassword())
+                && changedUser.getPassword() != null
+                && changedUser.getPassword() != ""){
+            user.setPassword(encoder.encode(newUser.password));
         }
-        if(!user.getPassword().equals(changedUser.getPassword())){
-            user.setPassword(changedUser.getPassword());
+        if (    !user.getUserBio().equals(changedUser.getUserBio())
+                && changedUser.getUserBio() != null
+                && changedUser.getUserBio() != ""){
+            user.setUserBio(newUser.userBio);
         }
-        if (!user.getUserBio().equals(changedUser.getUserBio())){
-            user.setUserBio(changedUser.getUserBio());
-        }
+
+        userRepos.save(user);
     }
+
+    public void updatePassword(String username, String password){
+        if (!userRepos.existsById(username)) throw new UsernameNotFoundException(username);
+        User user = userRepos.findById(username).get();
+        user.setPassword(encoder.encode(password));
+    }
+
 
     public void deleteUser(String username){
         userRepos.deleteById(username);

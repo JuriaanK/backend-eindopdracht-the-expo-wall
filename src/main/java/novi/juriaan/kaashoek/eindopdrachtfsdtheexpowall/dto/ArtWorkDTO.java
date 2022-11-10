@@ -25,8 +25,9 @@ public class ArtWorkDTO {
         dto.likes = artWork.getLikes();
         dto.artWorkImage = artWork.getArtWorkImage();
         dto.fileName = artWork.getFilename();
-        dto.account = AccountDTO.fromAccount(artWork.getAccount());
-
+        if(dto.account != null) {
+            dto.account = AccountDTO.fromAccount(artWork.getAccount());
+        }
         return dto;
     }
 
@@ -37,8 +38,9 @@ public class ArtWorkDTO {
         artWork.setLikes(artWorkDTO.likes);
         artWork.setArtWorkImage(artWorkDTO.artWorkImage);
         artWork.setFilename(artWorkDTO.fileName);
-        artWork.setAccount(AccountDTO.toAccount(artWorkDTO.account));
-
+        if (artWork.getAccount() != null) {
+            artWork.setAccount(AccountDTO.toAccount(artWorkDTO.account));
+        }
         return artWork;
     }
 }
