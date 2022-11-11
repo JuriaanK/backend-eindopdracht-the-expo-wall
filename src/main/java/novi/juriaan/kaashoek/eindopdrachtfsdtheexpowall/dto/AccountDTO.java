@@ -21,12 +21,12 @@ public class AccountDTO {
     public String firstName;
     public String lastName;
     public LocalDate DOB;
-    @Column
+
     @Lob
-    private byte[] profileImage;
+    public byte[] profileImage;
 
     public UserDTO user;
-    @JsonIgnoreProperties("account")
+
     public static List<ArtWorkDTO> artWork;
     @JsonIgnoreProperties("account")
     public static List<MessageDTO> message;
@@ -41,8 +41,8 @@ public class AccountDTO {
         dto.profileImage = account.getProfileImage();
         if (dto.user != null) {
             dto.user = UserDTO.fromUser(account.getUser());}
-        if(dto.artWork != null){
-            dto.artWork = AccountDTO.convertEntityToArtworkDTO(account.getArtWorkList());}
+        if (dto.artWork != null){
+        dto.artWork = AccountDTO.convertEntityToArtworkDTO(account.getArtWorkList());}
         if(dto.message != null){
             dto.message = AccountDTO.convertEntityToMessageDTO(account.getMessageList());}
 
@@ -60,7 +60,7 @@ public class AccountDTO {
         if (accountDTO.user != null){
             account.setUser(UserDTO.toUser(accountDTO.user));}
         if (account.getArtWorkList() != null){
-            account.setArtWorkList(accountDTO.convertArtworkDTOtoEntity(artWork));}
+        account.setArtWorkList(accountDTO.convertArtworkDTOtoEntity(artWork));}
         if (account.getMessageList() != null){
             account.setMessageList(accountDTO.convertMessageDTOtoEntity(message));}
 
@@ -68,7 +68,7 @@ public class AccountDTO {
     }
 
     public List<ArtWork> convertArtworkDTOtoEntity(List<ArtWorkDTO> artWorkDTOList){
-        List<ArtWork> newArtworkList = null;
+        List<ArtWork> newArtworkList =  new ArrayList<>();
 
         for (ArtWorkDTO dto : artWorkDTOList){
             newArtworkList.add(ArtWorkDTO.toArtWork(dto));
@@ -78,7 +78,7 @@ public class AccountDTO {
     }
 
     public static List<ArtWorkDTO> convertEntityToArtworkDTO(List<ArtWork> ArtWorkList){
-        List<ArtWorkDTO> newArtworkDTOList = null;
+        List<ArtWorkDTO> newArtworkDTOList =  new ArrayList<>();
 
         for (ArtWork artWork : ArtWorkList){
             newArtworkDTOList.add(ArtWorkDTO.fromArtWork(artWork));
@@ -88,7 +88,7 @@ public class AccountDTO {
     }
 
     public List<Message> convertMessageDTOtoEntity(List<MessageDTO> messageDTOList){
-        List<Message> newMessageList = null;
+        List<Message> newMessageList = new ArrayList<>();
 
         for (MessageDTO dto : messageDTOList){
             newMessageList.add(MessageDTO.toMessage(dto));
@@ -98,7 +98,7 @@ public class AccountDTO {
     }
 
     public static List<MessageDTO> convertEntityToMessageDTO(List<Message> messageList){
-        List<MessageDTO> newMessageDTOList = null;
+        List<MessageDTO> newMessageDTOList =  new ArrayList<>();
 
         for (Message message : messageList){
             newMessageDTOList.add(MessageDTO.fromMessage(message));

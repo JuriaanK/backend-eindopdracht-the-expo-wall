@@ -35,6 +35,7 @@ public class Account {
     private User user;
 
     @OneToMany(mappedBy = "account")
+    @Column
     private List<ArtWork> artWorkList;
 
     @OneToMany(mappedBy = "accountMes")

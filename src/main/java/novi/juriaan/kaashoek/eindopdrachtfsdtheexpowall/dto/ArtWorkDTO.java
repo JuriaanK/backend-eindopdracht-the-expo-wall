@@ -12,7 +12,7 @@ public class ArtWorkDTO {
     public Long artWorkID;
     public Long likes;
     public String fileName;
-    @JsonIgnore
+
     public AccountDTO account;
 
     @Lob
@@ -25,9 +25,8 @@ public class ArtWorkDTO {
         dto.likes = artWork.getLikes();
         dto.artWorkImage = artWork.getArtWorkImage();
         dto.fileName = artWork.getFilename();
-        if(dto.account != null) {
-            dto.account = AccountDTO.fromAccount(artWork.getAccount());
-        }
+        dto.account = AccountDTO.fromAccount(artWork.getAccount());
+
         return dto;
     }
 
@@ -38,9 +37,8 @@ public class ArtWorkDTO {
         artWork.setLikes(artWorkDTO.likes);
         artWork.setArtWorkImage(artWorkDTO.artWorkImage);
         artWork.setFilename(artWorkDTO.fileName);
-        if (artWork.getAccount() != null) {
-            artWork.setAccount(AccountDTO.toAccount(artWorkDTO.account));
-        }
+        artWork.setAccount(AccountDTO.toAccount(artWorkDTO.account));
+
         return artWork;
     }
 }
