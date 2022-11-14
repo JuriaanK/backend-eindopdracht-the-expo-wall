@@ -41,6 +41,14 @@ public class ArtWorkController {
         return ResponseEntity.ok().body(optionalArtWork);
     }
 
+    @GetMapping(value = "/byowner/{owner}")
+    public Collection<ArtWorkDTO> getArtWorkByOwner(@PathVariable("owner") Account owner){
+
+        Collection<ArtWorkDTO> artWorkByOwner = artWorkService.getArtWorkbyOnwer(owner);
+
+        return artWorkByOwner;
+    }
+
 
     @PostMapping(value = "/upload")
     public ArtWorkUploadResponse createArtWork (@RequestParam("artWorkImage") MultipartFile artWorkImage, @RequestParam("owner") Account owner) throws IOException {

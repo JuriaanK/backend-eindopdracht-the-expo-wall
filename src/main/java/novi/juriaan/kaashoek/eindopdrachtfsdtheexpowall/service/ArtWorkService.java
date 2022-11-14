@@ -48,6 +48,16 @@ public class ArtWorkService {
         return dto;
     }
 
+    public List<ArtWorkDTO> getArtWorkbyOnwer(Account id){
+        List<ArtWorkDTO> collection = new ArrayList<>();
+        List<ArtWork> allArtworks = artworkRepos.findByAccount(id);
+        for (ArtWork artwork : allArtworks){
+            collection.add(ArtWorkDTO.fromArtWork(artwork));
+        }
+
+        return collection;
+    }
+
     public Long createArtWork(ArtWorkDTO artWorkDTO){
         ArtWork artWork = artworkRepos.save(ArtWorkDTO.toArtWork(artWorkDTO));
 
