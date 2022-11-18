@@ -7,12 +7,17 @@ import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.model.Account;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.model.User;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.repository.AccountRepository;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.repository.UserRepository;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -29,9 +34,6 @@ public class AccountService {
 
         this.userRepos = userRepos;
     }
-
-
-
 
     public List<AccountDTO> getAccounts(){
         List<AccountDTO> allAccounts = new ArrayList<>();
@@ -58,7 +60,7 @@ public class AccountService {
         accountRepos.deleteById(id);
     }
 
-    public AccountDTO createAccount (AccountDTO accountDTO){
+    public AccountDTO createAccount (AccountDTO accountDTO) {
         Account account = AccountDTO.toAccount(accountDTO);
         Account savedAccount = accountRepos.save(account);
 

@@ -38,6 +38,7 @@ public class UserService {
     public UserDTO getUser(String username){
         UserDTO dto = new UserDTO();
         Optional<User> user = userRepos.findById(username);
+        String userRole = user.get().getRoles().toString();
         if (user.isPresent()){
             dto = UserDTO.fromUser(user.get());
         }else{
@@ -53,7 +54,6 @@ public class UserService {
         newUser.setPassword(encoder.encode(userDTO.password));
         newUser.setEmail(userDTO.email);
         newUser.setUserBio("Don't forget your Bio");
-
 
         List<Role> userRoles = new ArrayList<>();
         Optional<Role> or = roleRepos.findById("USER");
@@ -72,7 +72,6 @@ public class UserService {
         newAdmin.setEmail(userDTO.email);
         newAdmin.setUserBio("Don't forget your Bio");
 
-
         List<Role> userRoles = new ArrayList<>();
         Optional<Role> or = roleRepos.findById("ADMIN");
         userRoles.add(or.get());
@@ -81,7 +80,6 @@ public class UserService {
         userRepos.save(newAdmin);
         return newAdmin.getUsername();
     }
-
 
     public void updateUser(String username, UserDTO newUser){
         if (!userRepos.existsById(username)) throw new UsernameNotFoundException(username);
@@ -113,16 +111,7 @@ public class UserService {
         user.setPassword(encoder.encode(password));
     }
 
-
     public void deleteUser(String username){
         userRepos.deleteById(username);
     }
-
-
-
-
-
-
-
-
 }

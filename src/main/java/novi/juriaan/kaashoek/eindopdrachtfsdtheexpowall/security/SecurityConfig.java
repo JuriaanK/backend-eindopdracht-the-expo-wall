@@ -61,10 +61,12 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET,"/artworks").hasAnyAuthority("USER", "ADMIN")
                 .antMatchers(HttpMethod.POST,"/artworks").hasAnyAuthority("USER", "ADMIN")
                 .antMatchers(HttpMethod.PUT,"/artworks").hasAnyAuthority("USER", "ADMIN")
+                .antMatchers(HttpMethod.POST,"/users/admin").hasAnyAuthority("ADMIN")
+
                 .antMatchers("/messages").hasAnyAuthority("USER", "ADMIN")
 
                 .antMatchers("/roles").hasAnyAuthority("ADMIN")
-                .antMatchers("/users/admin").hasAuthority("ADMIN")
+
                 .and()
                 .addFilterBefore(new JwtRequestFilter(jwtService, userDetailsService()), UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable()

@@ -40,7 +40,7 @@ public class AccountController {
     }
 
     @PostMapping(value = "")
-    public ResponseEntity<AccountDTO> createAccount (@RequestBody AccountDTO accountDTO) {
+    public ResponseEntity<AccountDTO> createAccount (@RequestBody AccountDTO accountDTO) throws IOException {
 
         AccountDTO newAccount = accountService.createAccount(accountDTO);
 

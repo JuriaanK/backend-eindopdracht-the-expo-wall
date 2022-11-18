@@ -1,13 +1,9 @@
 package novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.controller;
 
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.dto.UserDTO;
-import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.exceptions.BadRequestException;
-import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.model.Role;
-import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.model.User;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.repository.RoleRepository;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.repository.UserRepository;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.service.UserService;
-import org.aspectj.weaver.NewConstructorTypeMunger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +15,6 @@ import java.util.*;
 public class UserController {
 
     private final UserService userService;
-
 
     public UserController(UserService userService, UserRepository userRepos, RoleRepository roleRepos, PasswordEncoder encoder) {
         this.userService = userService;
