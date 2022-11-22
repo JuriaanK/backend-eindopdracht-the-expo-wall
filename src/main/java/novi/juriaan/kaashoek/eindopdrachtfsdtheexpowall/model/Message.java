@@ -9,9 +9,9 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long messageID;
     @Column
-    private String sender;
+    private Long sender;
     @Column
-    private String receiver;
+    private Long receiver;
     @Column
     private String message;
 
@@ -19,7 +19,7 @@ public class Message {
     @JoinColumn(name = "account_id")
     private Account accountMes;
 
-    public Message(long messageID, String sender, String receiver, String message, Account accountMes) {
+    public Message(long messageID, Long sender, Long receiver, String message, Account accountMes) {
         this.messageID = messageID;
         this.sender = sender;
         this.receiver = receiver;
@@ -38,19 +38,19 @@ public class Message {
         this.messageID = messageID;
     }
 
-    public String getSender() {
+    public Long getSender() {
         return sender;
     }
 
-    public void setSender(String sender) {
+    public void setSender(Long sender) {
         this.sender = sender;
     }
 
-    public String getReceiver() {
+    public Long getReceiver() {
         return receiver;
     }
 
-    public void setReceiver(String receiver) {
+    public void setReceiver(Long receiver) {
         this.receiver = receiver;
     }
 

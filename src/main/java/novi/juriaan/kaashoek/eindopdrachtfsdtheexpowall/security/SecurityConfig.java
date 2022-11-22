@@ -58,12 +58,14 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET,"/users").hasAnyAuthority("USER", "ADMIN")
                 .antMatchers(HttpMethod.PUT,"/users").hasAnyAuthority("USER", "ADMIN")
 
+                .antMatchers(HttpMethod.GET,"/messages").hasAnyAuthority("USER", "ADMIN")
                 .antMatchers(HttpMethod.GET,"/artworks").hasAnyAuthority("USER", "ADMIN")
                 .antMatchers(HttpMethod.POST,"/artworks").hasAnyAuthority("USER", "ADMIN")
                 .antMatchers(HttpMethod.PUT,"/artworks").hasAnyAuthority("USER", "ADMIN")
                 .antMatchers(HttpMethod.POST,"/users/admin").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.POST,"/messages").hasAnyAuthority("ADMIN")
 
-                .antMatchers("/messages").hasAnyAuthority("USER", "ADMIN")
+
 
                 .antMatchers("/roles").hasAnyAuthority("ADMIN")
 

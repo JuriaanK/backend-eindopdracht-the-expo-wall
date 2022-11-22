@@ -56,6 +56,13 @@ public class Account {
     public Account() {
     }
 
+    public Account(Long id, String firstName, String lastName, LocalDate DOB) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.DOB = DOB;
+    }
+
     public Long getId() {
         return id;
     }

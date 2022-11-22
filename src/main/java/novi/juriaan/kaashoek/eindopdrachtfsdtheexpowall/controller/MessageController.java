@@ -34,6 +34,14 @@ public class MessageController {
         return ResponseEntity.ok().body(messageDTOs);
     }
 
+    @GetMapping(value ="/byreceiver/{id}")
+    public ResponseEntity<List<MessageDTO>> getByReceiver(@PathVariable ("id") Long id){
+
+        List<MessageDTO> messageDTOs =messageService.getMessageByReciever(id);
+
+        return ResponseEntity.ok().body(messageDTOs);
+    }
+
     @PostMapping(value = "")
     public ResponseEntity<MessageDTO> createMessage(@RequestBody MessageDTO messageDTO){
 

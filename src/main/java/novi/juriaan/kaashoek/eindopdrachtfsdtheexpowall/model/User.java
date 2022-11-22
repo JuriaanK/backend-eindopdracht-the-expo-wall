@@ -35,6 +35,15 @@ public class User {
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles;
 
+    public User(String username, String email, String password, String userBio, Account account, Long accountID) {
+        this.username = username;
+        this.email = email;
+        Password = password;
+        this.userBio = userBio;
+        this.account = account;
+        this.accountID = accountID;
+    }
+
     public Collection<Role> getRoles() {
         return roles;
     }

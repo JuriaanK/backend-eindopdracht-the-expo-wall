@@ -8,8 +8,8 @@ import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.model.Message;
 public class MessageDTO {
 
     public long messageID;
-    public String sender;
-    public String receiver;
+    public Long sender;
+    public Long receiver;
     public String messageContent;
     @JsonIgnore
     public Account accountMes;
