@@ -4,6 +4,7 @@ import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.dto.AccountDTO;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.dto.UserDTO;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.model.Account;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.model.User;
+import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.repository.RoleRepository;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.repository.UserRepository;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.security.JwtService;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.service.UserService;
@@ -15,14 +16,19 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.MvcResult;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -30,15 +36,13 @@ import java.util.*;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mockStatic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
-@ContextConfiguration("/applicationContext.xml")
-class UserControllerTest {
 
+class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -50,6 +54,12 @@ class UserControllerTest {
 
     @MockBean
     private UserRepository userRepository;
+
+    @MockBean
+    private RoleRepository roleRepository;
+
+    @MockBean
+    private PasswordEncoder passwordEncoder;
 
     User user1;
     User user2;
@@ -89,16 +99,67 @@ class UserControllerTest {
         userDTO3 = UserDTO.fromUser(user3);
     }
 
-
-
     @Test
     @WithMockUser(username="testuser", roles="USER")
     void shouldFetchAllUsers() throws Exception {
         given(userService.getUsers()).willReturn(List.of(userDTO1, userDTO2, userDTO3));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/users"))
-                .andExpect(status().isOk());
+        mockMvc.perform(get("/users"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].username").value("user1"))
+                .andExpect(jsonPath("$[0].email").value("user1@test.nl"))
+                .andExpect(jsonPath("$[0].password").value("W3lk0m!"))
+                .andExpect(jsonPath("$[0].email").value("user1@test.nl"))
+                .andExpect(jsonPath("$[0].userBio").value("blabla"))
+                .andExpect(jsonPath("$[0].accountID").value(1L))
+                .andExpect(jsonPath("$[1].username").value("user2"))
+                .andExpect(jsonPath("$[1].email").value("user2@test.nl"))
+                .andExpect(jsonPath("$[1].password").value("W3lk0m!"))
+                .andExpect(jsonPath("$[1].email").value("user2@test.nl"))
+                .andExpect(jsonPath("$[1].userBio").value("blabla"))
+                .andExpect(jsonPath("$[1].accountID").value(2L))
+                .andExpect(jsonPath("$[2].username").value("user3"))
+                .andExpect(jsonPath("$[2].email").value("user3@test.nl"))
+                .andExpect(jsonPath("$[2].password").value("W3lk0m!"))
+                .andExpect(jsonPath("$[2].email").value("user3@test.nl"))
+                .andExpect(jsonPath("$[2].userBio").value("blabla"))
+                .andExpect(jsonPath("$[2].accountID").value(3L));
+    }
+    @Test
+    @WithMockUser(username="testuser", roles="USER")
+    void shouldFetchUser() throws Exception {
+        given(userService.getUser(anyString())).willReturn(userDTO2);
 
+        mockMvc.perform(get("/users/user2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("username").value("user2"))
+                .andExpect(jsonPath("email").value("user2@test.nl"))
+                .andExpect(jsonPath("password").value("W3lk0m!"))
+                .andExpect(jsonPath("email").value("user2@test.nl"))
+                .andExpect(jsonPath("userBio").value("blabla"))
+                .andExpect(jsonPath("accountID").value(2L));
+    }
 
+    @Test
+    void shouldSaveUser() throws Exception {
+        given(userService.createUser(userDTO2)).willReturn(userDTO2.toString());
+
+        mockMvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(userDTO2)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("username").value("user2"))
+                .andExpect(jsonPath("email").value("user2@test.nl"))
+                .andExpect(jsonPath("password").value("W3lk0m!"))
+                .andExpect(jsonPath("email").value("user2@test.nl"))
+                .andExpect(jsonPath("userBio").value("blabla"))
+                .andExpect(jsonPath("accountID").value(2L));
+    }
+    public static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
