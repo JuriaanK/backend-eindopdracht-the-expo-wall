@@ -2,11 +2,16 @@ package novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.model.Account;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.model.ArtWork;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.model.Message;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.model.User;
 import org.springframework.stereotype.Component;
+
 
 import javax.persistence.Column;
 import javax.persistence.Lob;
@@ -20,6 +25,8 @@ public class AccountDTO {
     public Long id;
     public String firstName;
     public String lastName;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     public LocalDate DOB;
 
     @Lob

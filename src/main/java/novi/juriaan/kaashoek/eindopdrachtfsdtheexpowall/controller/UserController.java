@@ -26,39 +26,29 @@ public class UserController {
 
         return ResponseEntity.ok().body(userDTOs);
     }
-
     @GetMapping(value = "/{username}")
-    public ResponseEntity<UserDTO> getUser(@PathVariable("username") String username){
+    public ResponseEntity<UserDTO> getUser(@PathVariable("username") String username) {
         UserDTO askedUser = userService.getUser(username);
 
         return ResponseEntity.ok().body(askedUser);
     }
-
     @PostMapping(value = "")
     public String createUser(@RequestBody UserDTO userDTO){
         String newUser = userService.createUser(userDTO);
 
         return "Created " + newUser;
     }
-
     @PostMapping(value = "/admin")
     public String createAdmin(@RequestBody UserDTO userDTO){
         String newAdmin = userService.createAdmin(userDTO);
+
         return "Created " + newAdmin;
     }
-
     @PutMapping(value = "/{username}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable("username") String username, @RequestBody UserDTO userDTO){
         userService.updateUser(username, userDTO);
 
         return ResponseEntity.ok().body(userDTO);
-    }
-
-    @PutMapping(value = "/passwordchange/{username}")
-    public ResponseEntity<String> updatePassword(@PathVariable("username") String username, @RequestBody String password){
-        userService.updatePassword(username, password);
-
-        return ResponseEntity.ok().body(password);
     }
 
     @DeleteMapping(value = "/{username}")

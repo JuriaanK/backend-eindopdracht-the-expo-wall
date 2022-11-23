@@ -26,14 +26,6 @@ public class MessageController {
         return ResponseEntity.ok().body(messageDTOs);
     }
 
-    @GetMapping(value ="/conversation/{sender}/{receiver}")
-    public ResponseEntity<List<MessageDTO>> getConversation(@PathVariable ("sender") String sender , @PathVariable ("reciever") String receiver){
-
-        List<MessageDTO> messageDTOs =messageService.getConversation(sender, receiver);
-
-        return ResponseEntity.ok().body(messageDTOs);
-    }
-
     @GetMapping(value ="/byreceiver/{id}")
     public ResponseEntity<List<MessageDTO>> getByReceiver(@PathVariable ("id") Long id){
 

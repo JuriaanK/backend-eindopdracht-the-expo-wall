@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -24,6 +25,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -31,6 +33,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -51,7 +54,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(UserController.class)
+@WebMvcTest(value = UserController.class, excludeAutoConfiguration = {SecurityAutoConfiguration.class})
+
 class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -77,6 +81,7 @@ class UserControllerTest {
     User user1;
     User user2;
     User user3;
+    User changeUser;
     User userInput1;
 
     Account account1;
@@ -91,6 +96,7 @@ class UserControllerTest {
     UserDTO userDTO2;
     UserDTO userDTO3;
 
+    UserDTO changeUserDTO;
     UserDTO userInputDTO1;
 
     @BeforeEach
@@ -104,6 +110,8 @@ class UserControllerTest {
         user2 = new User("user2", "user2@test.nl", "W3lk0m!", "blabla", account2, 2L);
         user3 = new User("user3", "user3@test.nl", "W3lk0m!", "blabla", account3, 3L);
 
+        changeUser = new User("", "", "W3lk0m#", "ja ja", account3, 3L);
+
         accountDTO1 = AccountDTO.fromAccount(account1);
         accountDTO2 = AccountDTO.fromAccount(account2);
         accountDTO3 = AccountDTO.fromAccount(account3);
@@ -114,13 +122,14 @@ class UserControllerTest {
         userDTO2 = UserDTO.fromUser(user2);
         userDTO3 = UserDTO.fromUser(user3);
 
+        changeUserDTO = UserDTO.fromUser(changeUser);
         userInputDTO1 = UserDTO.fromUser(userInput1);
     }
 
     @Test
     @WithMockUser(username="testuser", roles="USER")
     void shouldFetchAllUsers() throws Exception {
-        given(userService.getUsers()).willReturn(List.of(userDTO1, userDTO2, userDTO3));
+        when(userService.getUsers()).thenReturn(List.of(userDTO1, userDTO2, userDTO3));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/users"))
                 .andDo(MockMvcResultHandlers.print())
@@ -144,7 +153,7 @@ class UserControllerTest {
     @Test
     @WithMockUser(username="testuser", roles="USER")
     void shouldFetchUser() throws Exception {
-        given(userService.getUser(anyString())).willReturn(userDTO2);
+        when(userService.getUser("user2")).thenReturn(userDTO2);
 
         mockMvc.perform(get("/users/user2"))
                 .andExpect(status().isOk())
@@ -157,9 +166,30 @@ class UserControllerTest {
 
     @Test
     void shouldSaveUser() throws Exception {
-        given(userService.createUser(userDTO1)).willReturn(userDTO1.username);
+        when(userService.createUser(userDTO1)).thenReturn("user1");
 
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/users").with(csrf().asHeader())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(userDTO1)))
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    void shouldSaveAdmin() throws Exception {
+        when(userService.createAdmin(userDTO1)).thenReturn("user1");
+
+        mockMvc.perform(post("/users/admin").with(csrf().asHeader())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(userDTO1)))
+                .andExpect(status().isOk());
+
+    }
+    @Test
+    void shouldChangeUser() throws Exception {
+        given(userService.updateUser("user1", changeUserDTO)).willReturn(changeUserDTO);
+
+        mockMvc.perform(put("/users/user1").with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(userDTO1)))
                 .andExpect(status().isOk());

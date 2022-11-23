@@ -40,22 +40,6 @@ public class MessageService {
         return collection;
     }
 
-
-    public List<MessageDTO> getConversation(String sender, String receiver){
-        List<MessageDTO> collection = new ArrayList<>();
-        List<Message> totalList = messageRepos.findAll();
-        for(Message message : totalList){
-            if (message.getSender().equals(sender) && message.getReceiver().equals(receiver)){
-                collection.add(MessageDTO.fromMessage(message));
-            }
-            if (message.getSender().equals(receiver) && message.getReceiver().equals(sender)){
-                collection.add(MessageDTO.fromMessage(message));
-            }
-        }
-
-        return collection;
-    }
-
     public MessageDTO creatMessage(MessageDTO messageDto){
         Message newMessage = messageRepos.save(MessageDTO.toMessage(messageDto));
         return MessageDTO.fromMessage(newMessage);

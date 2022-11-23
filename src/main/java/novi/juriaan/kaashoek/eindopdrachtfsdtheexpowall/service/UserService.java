@@ -81,7 +81,7 @@ public class UserService {
         return newAdmin.getUsername();
     }
 
-    public void updateUser(String username, UserDTO newUser){
+    public UserDTO updateUser(String username, UserDTO newUser){
         if (!userRepos.existsById(username)) throw new UsernameNotFoundException(username);
         User user = userRepos.findById(username).get();
         User changedUser = UserDTO.toUser(newUser);
@@ -103,6 +103,7 @@ public class UserService {
         }
 
         userRepos.save(user);
+        return UserDTO.fromUser(user);
     }
 
     public void updatePassword(String username, String password){
