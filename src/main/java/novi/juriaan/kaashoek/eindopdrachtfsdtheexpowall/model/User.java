@@ -44,6 +44,15 @@ public class User {
         this.accountID = accountID;
     }
 
+    public User(String username, String email, String password, String userBio) {
+        this.username = username;
+        this.email = email;
+        Password = password;
+        this.userBio = userBio;
+    }
+
+
+
     public Collection<Role> getRoles() {
         return roles;
     }
