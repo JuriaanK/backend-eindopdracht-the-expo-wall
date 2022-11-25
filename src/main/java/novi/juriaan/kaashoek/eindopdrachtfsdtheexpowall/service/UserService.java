@@ -5,7 +5,10 @@ import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.model.Role;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.model.User;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.repository.RoleRepository;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +20,26 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepos;
-    private final RoleRepository roleRepos;
+    final RoleRepository roleRepos;
     private final PasswordEncoder encoder;
-
     public UserService(UserRepository userRepos, RoleRepository roleRepos, PasswordEncoder encoder) {
         this.userRepos = userRepos;
         this.roleRepos = roleRepos;
         this.encoder = encoder;
     }
+
+    public void setRole(){
+        Role role1 =new Role();
+
+
+        role1.setRolename("USER");
+
+
+        roleRepos.save(role1);
+
+
+    }
+
 
     public List<UserDTO> getUsers(){
         List<UserDTO> collection = new ArrayList<>();
@@ -51,7 +66,8 @@ public class UserService {
     public String createUser(UserDTO userDTO){
         User newUser = new User();
         newUser.setUsername(userDTO.username);
-        newUser.setPassword(encoder.encode(userDTO.password));
+        if(encoder.encode(userDTO.password) != null){
+        newUser.setPassword(encoder.encode(userDTO.password));}
         newUser.setEmail(userDTO.email);
         newUser.setUserBio("Don't forget your Bio");
 

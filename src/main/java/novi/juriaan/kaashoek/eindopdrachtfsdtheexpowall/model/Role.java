@@ -13,6 +13,13 @@ public class Role {
     @ManyToMany(mappedBy = "roles")
     private Collection<User> users;
 
+    public Role(String rolename) {
+    }
+
+    public Role() {
+
+    }
+
     public String getRolename() {
         return rolename;
     }

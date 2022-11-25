@@ -30,6 +30,13 @@ public class Message {
     public Message() {
     }
 
+    public Message(long messageID, Long sender, Long receiver, String message) {
+        this.messageID = messageID;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.message = message;
+    }
+
     public long getMessageID() {
         return messageID;
     }
