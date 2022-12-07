@@ -64,7 +64,7 @@ public class ArtWorkService {
         return artWork.getArtWorkID();
     }
 
-    public void deleteAccount(Long id){
+    public void deleteArtWork(Long id){
         artworkRepos.deleteById(id);
     }
 

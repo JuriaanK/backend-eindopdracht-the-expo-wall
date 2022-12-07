@@ -6,6 +6,7 @@ import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.model.Role;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.model.User;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.repository.RoleRepository;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.repository.UserRepository;
+import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.security.MyUserDetails;
 import novi.juriaan.kaashoek.eindopdrachtfsdtheexpowall.security.SecurityConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,22 +15,22 @@ import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class UserServiceTest {
     @Mock
-    UserRepository userRepository;
+    UserRepository userRepos;
 
     @Mock
     RoleRepository roleRepository;
@@ -38,10 +39,13 @@ class UserServiceTest {
     RoleService roleService;
 
     @InjectMocks
-    UserService userService = new UserService(userRepository, roleRepository, new BCryptPasswordEncoder());
+    UserService userService;
 
     @Mock
     SecurityConfig securityConfig;
+
+    @Mock
+    MyUserDetails myUserDetails;
 
     @Captor
     ArgumentCaptor<User> argumentCaptor;
@@ -53,6 +57,8 @@ class UserServiceTest {
     User user1;
     User user2;
     User user3;
+
+    User updateUser;
 
     Role role;
 
@@ -67,19 +73,20 @@ class UserServiceTest {
         user2 = new User("user2", "user2@test.nl", "W3lk0m!", "blabla", account2, 2L);
         user3 = new User("user3", "user3@test.nl", "W3lk0m!", "blabla", account3, 3L);
 
+        updateUser = new User("user1", "user1@test.nl", "W3lk0m!", "Jajajaja", account1, 1L);
+
        Collection<Role> userRoles = new ArrayList<>();
        role = new Role();
        role.setRolename("USER");
        userRoles.add(role);
        user2.setRoles(userRoles);
-
     }
 
     @Test
     void getUsers() {
-        when(userRepository.findAll()).thenReturn(List.of(user1, user2, user3));
+        when(userRepos.findAll()).thenReturn(List.of(user1, user2, user3));
 
-        List<User> users = userRepository.findAll();
+        List<User> users = userRepos.findAll();
         List<UserDTO> userDTOS = userService.getUsers();
 
         assertEquals(users.get(0).getUsername(), userDTOS.get(0).username);
@@ -91,9 +98,9 @@ class UserServiceTest {
 
     @Test
     void getUser() {
-        when(userRepository.findById("user2")).thenReturn(Optional.ofNullable(user2));
+        when(userRepos.findById("user2")).thenReturn(Optional.ofNullable(user2));
 
-        User user = userRepository.findById("user2").get();
+        User user = userRepos.findById("user2").get();
         UserDTO userDTO = userService.getUser("user2");
 
         assertEquals(user.getUsername(), userDTO.username);
@@ -104,18 +111,30 @@ class UserServiceTest {
     }
 
     @Test
-    void createUser() {
-    }
-
-    @Test
-    void createAdmin() {
-    }
-
-    @Test
     void updateUser() {
+        when(userRepos.findById("user1")).thenReturn(Optional.of(user1));
+
+        UserDTO userDto = UserDTO.fromUser(updateUser);
+
+        when(userRepos.save(UserDTO.toUser(userDto))).thenReturn(user1);
+
+        userService.updateUser("user1" , userDto);
+
+        verify(userRepos, times(1)).save(argumentCaptor.capture());
+
+        User captured = argumentCaptor.getValue();
+
+        assertEquals(userDto.username, captured.getUsername());
+        assertEquals(userDto.email, captured.getEmail());
+        assertEquals(userDto.password, captured.getPassword());
+        assertEquals(userDto.userBio, captured.getUserBio());
+        assertEquals(userDto.accountID, captured.getAccountID());
     }
 
     @Test
     void deleteUser() {
+        userService.deleteUser("user1");
+
+        verify(userRepos).deleteById("user1");
     }
 }

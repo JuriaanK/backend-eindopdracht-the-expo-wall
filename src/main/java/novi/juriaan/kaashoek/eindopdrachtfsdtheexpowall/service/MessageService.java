@@ -40,7 +40,7 @@ public class MessageService {
         return collection;
     }
 
-    public MessageDTO creatMessage(MessageDTO messageDto){
+    public MessageDTO createMessage(MessageDTO messageDto){
         Message newMessage = messageRepos.save(MessageDTO.toMessage(messageDto));
         return MessageDTO.fromMessage(newMessage);
     }

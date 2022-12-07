@@ -45,7 +45,8 @@ public class AccountDTO {
         dto.firstName = account.getFirstName();
         dto.lastName = account.getLastName();
         dto.DOB = account.getDOB();
-        dto.profileImage = account.getProfileImage();
+        if (dto.profileImage != null){
+        dto.profileImage = account.getProfileImage();}
         if (dto.user != null) {
             dto.user = UserDTO.fromUser(account.getUser());}
         if (dto.artWork != null){
@@ -63,7 +64,8 @@ public class AccountDTO {
         account.setFirstName(accountDTO.firstName);
         account.setLastName(accountDTO.lastName);
         account.setDOB(accountDTO.DOB);
-        account.setProfileImage(accountDTO.profileImage);
+        if (account.getProfileImage() != null){
+        account.setProfileImage(accountDTO.profileImage);}
         if (accountDTO.user != null){
             account.setUser(UserDTO.toUser(accountDTO.user));}
         if (account.getArtWorkList() != null){

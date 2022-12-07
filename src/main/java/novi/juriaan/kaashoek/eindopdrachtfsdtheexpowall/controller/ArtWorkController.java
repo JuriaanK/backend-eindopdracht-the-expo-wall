@@ -74,7 +74,7 @@ public class ArtWorkController {
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Object> deleteArtWork(@PathVariable("id") Long id){
 
-        artWorkService.deleteAccount(id);
+        artWorkService.deleteArtWork(id);
 
         return ResponseEntity.noContent().build();
     }

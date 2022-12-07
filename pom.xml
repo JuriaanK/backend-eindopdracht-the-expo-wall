@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>novi.juriaan.kaashoek</groupId>
 	<artifactId>eindopdracht-fsd-the-expo-wall</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>VERSION 1.0</version>
 	<name>eindopdracht-fsd-the-expo-wall</name>
 	<description>Eindopdracht voor de leerlijn Front- en Back-end van NOVI</description>
 	<properties>

@@ -37,7 +37,7 @@ public class MessageController {
     @PostMapping(value = "")
     public ResponseEntity<MessageDTO> createMessage(@RequestBody MessageDTO messageDTO){
 
-        MessageDTO newMessage = messageService.creatMessage(messageDTO);
+        MessageDTO newMessage = messageService.createMessage(messageDTO);
 
         return ResponseEntity.created(null).body(newMessage);
     }

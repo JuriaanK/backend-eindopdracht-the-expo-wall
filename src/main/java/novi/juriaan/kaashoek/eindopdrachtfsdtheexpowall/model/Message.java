@@ -13,28 +13,34 @@ public class Message {
     @Column
     private Long receiver;
     @Column
-    private String message;
+    private String messageContent;
 
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account accountMes;
 
-    public Message(long messageID, Long sender, Long receiver, String message, Account accountMes) {
+    public Message(long messageID, Long sender, Long receiver, String messageContent, Account accountMes) {
         this.messageID = messageID;
         this.sender = sender;
         this.receiver = receiver;
-        this.message = message;
+        this.messageContent = messageContent;
         this.accountMes = accountMes;
     }
 
     public Message() {
     }
 
-    public Message(long messageID, Long sender, Long receiver, String message) {
+    public Message(long messageID, Long sender, Long receiver, String messageContent) {
         this.messageID = messageID;
         this.sender = sender;
         this.receiver = receiver;
-        this.message = message;
+        this.messageContent = messageContent;
+    }
+
+    public Message(Long sender, Long receiver, String messageContent) {
+        this.sender = sender;
+        this.receiver = receiver;
+        this.messageContent = messageContent;
     }
 
     public long getMessageID() {
@@ -62,11 +68,11 @@ public class Message {
     }
 
     public String getMessage() {
-        return message;
+        return messageContent;
     }
 
     public void setMessage(String message) {
-        this.message = message;
+        this.messageContent = messageContent;
     }
 
     public Account getAccountMes() {

@@ -127,7 +127,7 @@ class MessageControllerTest {
 
     @Test
     void shouldCreateMessage() throws Exception {
-        when(messageService.creatMessage(createMessageDTO)).thenReturn(createMessageDTO);
+        when(messageService.createMessage(createMessageDTO)).thenReturn(createMessageDTO);
 
         mockMvc.perform(post("/messages").with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)

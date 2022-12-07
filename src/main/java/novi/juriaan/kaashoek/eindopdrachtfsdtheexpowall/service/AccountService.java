@@ -91,24 +91,27 @@ public class AccountService {
     }
 
     public AccountDTO changeAccount (Long id, AccountDTO inputDto){
-        if(!accountRepos.existsById(id)) throw new RecordNotFoundException(id.toString());
         Account changedAccount = AccountDTO.toAccount(inputDto);
         Account account = accountRepos.findById(id).get();
 
-        if (!account.getFirstName().equals(changedAccount.getFirstName())){
+        if(accountRepos.findById(id).isPresent()) {
+
+            if (!account.getFirstName().equals(changedAccount.getFirstName())) {
             account.setFirstName(changedAccount.getFirstName());
-        }
-        if(!account.getLastName().equals(changedAccount.getLastName())){
+            }
+            if (!account.getLastName().equals(changedAccount.getLastName())) {
             account.setLastName(changedAccount.getLastName());
-        }
-        if(!account.getDOB().equals(changedAccount.getDOB())){
+            }
+            if (!account.getDOB().equals(changedAccount.getDOB())) {
             account.setDOB(changedAccount.getDOB());
-        }
-        if(!account.getProfileImage().equals(changedAccount.getProfileImage())){
-            account.setProfileImage(changedAccount.getProfileImage());
-        }
+            }
+            if(account.getProfileImage() != null){
+            if (!account.getProfileImage().equals(changedAccount.getProfileImage())) {
+                account.setProfileImage(changedAccount.getProfileImage());
+            }}
 
-
+            accountRepos.save(changedAccount);
+         }
         return AccountDTO.fromAccount(changedAccount);
     }
 }
